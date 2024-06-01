@@ -4,6 +4,9 @@
   "description": "",
   "type": "module",
   "main": "index.js",
+  "engines": {
+    "node": "20.14.x"
+  },
   "scripts": {
     "start": "node src/app.js",
     "dev": "node --watch src/app.js"
