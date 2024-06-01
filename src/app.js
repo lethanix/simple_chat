@@ -27,6 +27,10 @@ socketServer.on("connection", (socketClient) => {
 
     socketServer.emit("log", messages);
 
+    socketClient.on("authenticated", username => {
+        socketClient.broadcast.emit("newUserConnected", username);
+    })
+
     socketClient.on("message", (messageData) => {
         console.log(messageData);
         messages.push(messageData);

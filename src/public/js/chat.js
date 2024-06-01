@@ -17,6 +17,7 @@ Swal.fire({
 }).then((res) => {
     username = res.value;
     socket.connect();
+    socket.emit("authenticated", username);
 });
 
 console.log("Chat Client: Connection successful");
@@ -24,15 +25,18 @@ console.log("Chat Client: Connection successful");
 const chatbox = document.getElementById("chatbox");
 chatbox.addEventListener("keyup", (e) => {
     if (e.key === "Enter") {
-        // Send message
-        socket.emit("message", {username: username, message: chatbox.value});
-        // socket.emit("message", chatbox.value);
+        if (chatbox.value.trim()) {
+            // Send message
+            socket.emit("message", {username: username, message: chatbox.value});
+            // socket.emit("message", chatbox.value);
 
-        // Clear input box
-        chatbox.value = "";
+            // Clear input box
+            chatbox.value = "";
+        }
     }
 })
 
+// Events
 socket.on("log", (data) => {
     const logs = document.getElementById("messagesLog");
     let messages = "";
@@ -41,4 +45,14 @@ socket.on("log", (data) => {
     })
     console.log(messages);
     logs.innerHTML = messages;
-})
+});
+
+
+socket.on("newUserConnected", (username) => {
+    Swal.fire({
+        toast: true,
+        showConfirmButton: false,
+        timer: 3000,
+        title: `${username} has joined the chat`,
+    });
+});
